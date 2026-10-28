@@ -1,0 +1,6 @@
+{
+  "name": "مُدَوِّن | Modawen Notes & Reminders",
+  "description": "تطبيق ملاحظات عصري وجذاب مع التذكيرات الذكية، النسخ السريع، الحفظ التلقائي والتصنيفات المتعددة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

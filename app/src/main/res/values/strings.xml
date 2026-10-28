@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">مُدَوِّن</string>
+    <string name="app_full_title">مُدَوِّن | الملاحظات والتذكيرات</string>
+    <string name="search_placeholder">ابحث في الملاحظات، المهام، الوسوم...</string>
+    <string name="new_note">ملاحظة جديدة</string>
+    <string name="all_notes">جميع الملاحظات</string>
+    <string name="reminders">التذكيرات القادمة</string>
+    <string name="pinned">المثبتة</string>
+    <string name="favorites">المفضلة</string>
+    <string name="archived">المؤرشفة</string>
+    <string name="trash">سلة المحذوفات</string>
+    <string name="empty_trash">تفريغ سلة المحذوفات</string>
+    <string name="categories">التصنيفات</string>
+    <string name="tags">الوسوم الشائعة</string>
+    <string name="backup_export">تصدير الملاحظات (JSON)</string>
+    <string name="backup_import">استيراد نسخة احتياطية</string>
+</resources>

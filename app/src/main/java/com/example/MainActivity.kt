@@ -1,4 +1,4 @@
-package com.example.modawen
+package com.example
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

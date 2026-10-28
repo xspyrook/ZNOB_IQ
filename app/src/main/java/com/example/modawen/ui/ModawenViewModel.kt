@@ -133,36 +133,50 @@ class ModawenViewModel(application: Application) : AndroidViewModel(application)
         set.toList()
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    // Filtered & Sorted Notes
-    val displayNotes: StateFlow<List<Note>> = combine(
-        _notes,
+    private data class FilterState(
+        val filter: FilterCategory,
+        val category: String,
+        val tag: String?,
+        val query: String,
+        val sort: SortOption
+    )
+
+    private val filterState = combine(
         _currentFilter,
         _selectedCategory,
         _selectedTag,
         _searchQuery,
         _sortBy
-    ) { notesList, filter, category, tag, query, sort ->
+    ) { filter, category, tag, query, sort ->
+        FilterState(filter, category, tag, query, sort)
+    }
+
+    // Filtered & Sorted Notes
+    val displayNotes: StateFlow<List<Note>> = combine(
+        _notes,
+        filterState
+    ) { notesList, state ->
         val filtered = notesList.filter { note ->
-            if (filter == FilterCategory.TRASH) return@filter note.isTrash
+            if (state.filter == FilterCategory.TRASH) return@filter note.isTrash
             if (note.isTrash) return@filter false
 
-            if (filter == FilterCategory.ARCHIVED) return@filter note.isArchived
+            if (state.filter == FilterCategory.ARCHIVED) return@filter note.isArchived
             if (note.isArchived) return@filter false
 
-            if (filter == FilterCategory.REMINDERS && note.reminderAt == null) return@filter false
-            if (filter == FilterCategory.PINNED && !note.isPinned) return@filter false
-            if (filter == FilterCategory.FAVORITES && !note.isFavorite) return@filter false
+            if (state.filter == FilterCategory.REMINDERS && note.reminderAt == null) return@filter false
+            if (state.filter == FilterCategory.PINNED && !note.isPinned) return@filter false
+            if (state.filter == FilterCategory.FAVORITES && !note.isFavorite) return@filter false
 
-            if (filter == FilterCategory.ALL && category != "الكل") {
-                if (note.category != category) return@filter false
+            if (state.filter == FilterCategory.ALL && state.category != "الكل") {
+                if (note.category != state.category) return@filter false
             }
 
-            if (tag != null && !note.tags.contains(tag)) {
+            if (state.tag != null && !note.tags.contains(state.tag)) {
                 return@filter false
             }
 
-            if (query.isNotBlank()) {
-                val q = query.lowercase().trim()
+            if (state.query.isNotBlank()) {
+                val q = state.query.lowercase().trim()
                 val titleMatch = note.title.lowercase().contains(q)
                 val contentMatch = note.content.lowercase().contains(q)
                 val tagMatch = note.tags.any { it.lowercase().contains(q) }
@@ -174,7 +188,7 @@ class ModawenViewModel(application: Application) : AndroidViewModel(application)
         }
 
         // Sorting
-        when (sort) {
+        when (state.sort) {
             SortOption.UPDATED -> filtered.sortedByDescending { it.updatedAt }
             SortOption.CREATED -> filtered.sortedByDescending { it.createdAt }
             SortOption.TITLE -> filtered.sortedBy { it.title }
